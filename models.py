@@ -11,7 +11,6 @@ monsters = [
     {"_id": 10, "name": "Squelette", "atk": 15, "def": 7, "pv": 90}
 ]
 
-
 characters = [
     {"_id": 1, "name": "Guerrier", "atk": 1000, "def": 10, "pv": 100},
     {"_id": 2, "name": "Panda", "atk": 1, "def": 10000, "pv": 1000000},
