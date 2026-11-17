@@ -1,5 +1,6 @@
 import random
 import utils
+import models
 
 TEAM_SIZE = 3
 WAVE_SIZE = 4
@@ -33,53 +34,74 @@ def is_team_alive(team) -> bool:
             return True
     return False
 
+
+
 def is_alive(character):
     return character["pv"] > 0
 
 def new_wave(monsters):
     # initaliser new_wave avec un sample de monsters de len WAVE_SIZE
     # return new wave
-    ...
+    wave = random.sample(monsters, 3)
+    return wave
 
 def attack(attacker, target) -> int:
     # return les nouveau pv de la target - attack // def
-    ...
+    target_pv = target["pv"] - attacker["atk"] // target["def"]
+    return target_pv
 
-def fight(team, wave) -> bool:
-    ...
-    # tant que les monstres ne sont pas tous mort
-        # si les perso de l'équipe sont pas alive:
-            # return false
-        # pour chaque monstre
-            # pour chaque character
-                # character attack monstre
-                # monstre attack character
-    # return true
-
-def recalculate_score(wave_number, score) -> int:
-    # return score + wave * 2
-    ...
-
-def save_score(score):
-    ...
-
-def play():
-    # récupérer les collections monstres et characters de la DB
-    # créer une équipe
-        # create_team() -> renvoie une liste de characters
+def start_fight(team, monsters):
     # initaliser le score et le nombre de vague à 0
     # tant que tout les characters dans l'équipe sont en vie:
-        # appeler nouvelle vague -> renvoie une liste de monsters de len WAVE_SIZE
+        # créer une nouvelle vague -> renvoie une liste de monsters de len WAVE_SIZE
         # incrémenter nombre de vague
         # combat entre notre équipe et new wave -> renvoie un bool: True si notre équipe gagne, False si elle a perdu
             # si equipe gagne
                 # recalculer score
             # sinon
                 # sortir de la boucle while
-    # message de fin avec score et nombre de vague
-    # save_score
-        # sauvegarder le score dans la base de donnée
+    # return score, wave_number
+    score = 0
+    wave_number = 0
+
+    while is_team_alive(team):
+        current_wave = new_wave(monsters)
+        wave_number += 1
+        team_win = fight_wave(team, current_wave)
+        if team_win:
+            new_score = recalculate_score(wave_number, score)
+            score = new_score
+            utils.print_wave_win(score)
+        else:
+            break
+    return score, wave_number
+    
+def fight_wave(team, wave) -> bool:
+    # tant que les monstres ne sont pas tous mort
+        # pour chaque monstre encore alive  
+            # si au moins un perso de l'équipe n'est pas alive:
+                # return false
+            # pour chaque characater encore alive        
     ...
+
+def recalculate_score(wave_number, score) -> int:
+    # return score + wave * 2
+    return score + wave_number * 2
+
+def save_score(score):
+    ...
+
+def play():
+    # récupérer les collections monstres et characters de la DB
+    # créer une équipe : create_team() -> renvoie une liste de characters
+    # lancer le combat : start_fight(team) -> qui return score et wave_number
+    # envoyer un message de fin avec score et nombre de vague
+    # sauvegarder les scores
+    characters, monsters = models.characters, models.monsters
+    team = create_team(characters)
+    score, wave_number = start_fight(team, monsters)
+    utils.print_end(score, wave_number)
+    save_score(score)
 
 def show_leaderboard():
     ...
