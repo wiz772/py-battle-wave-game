@@ -1,40 +1,13 @@
 import random
-
-# options 
-    # list dict associations name, function
-
-# Récupérer un choix valide parmi les options(options)
-    # while True
-        # afficher options numérotées: print_options(options)
-        # récupérer choix: input()
-        # si choix valide: is_choice_valid(choix, 1, len(options)
-            # return choix en int
-
-# print_options(options):
-    # récupérer liste des "name"
-    # pour chaque index, option dans enumerate(options_names) commençant à 1
-        # afficher option numérotée de l'indice
-
-# is_choice_valid(choice, min, max):
-    # vérifier si le choix contient seulement des entiers
-        # convertir str to int
-        # vérifier si le choix est compris entre min et max
-            # return True
-    # return False
-
-# Main
-    # choice = Récupérer choix valide parmi les options(options)
-    # Lancer le processus associé au choix : options[choice - 1]["function"]()
+import utils
 
 TEAM_SIZE = 3
-
+WAVE_SIZE = 4
 
 # Créer une équipe
-        # characters = get la collection charachters
-        # available_chars = copy characters
-        # equipe = []
+        # initialiser available_chars = copy characters
+        # initialiser equipe = []
         # tant que len equipe< TEAM_SIZE
-            # afficher available chars
             # choisir parmis les options 
             # valider choix, si valide:
                 # append choix à equipe
@@ -45,111 +18,113 @@ def create_team(characters):
     team = []
     while len(team) < TEAM_SIZE:
         choice = get_valid_choice(available_chars)
-        team.append(choice - 1)
+        team.append(available_chars[choice - 1])
         available_chars.pop(choice - 1)
     return team
 
 def is_team_alive(team):
-   return any(character["pv"] > 0 for character in team)
+    # pour chaque personnage dans team
+        # si un personnage a des pv supérieur à 0
+            # return True
+        # sinon
+            # False
+    for character in team:
+        if character["pv"] > 0:
+            return True
+    return False
+
+def is_alive(character):
+    return character["pv"] > 0
 
 def new_wave(monsters):
-    available_monsters = monsters.copy() 
-    new_wave = random.sample(available_monsters, 3)
-    return new_wave
-    #Nouvelle liste wave:
-    # pick 3 monsters
-    # append à new wave
+    # initaliser new_wave avec un sample de monsters de len WAVE_SIZE
     # return new wave
-
-def fight(team, wave):
     ...
-    # while is_team_alive(wave):
-    #     if not is_team_alive(team):
-    #         return False
-    #     for monster in wave:
-    #         for character in team:
-    #             print(f"{character}")
+
+def attack(attacker, target) -> int:
+    # return les nouveau pv de la target - attack // def
+    ...
+
+def fight(team, wave) -> bool:
+    ...
     # tant que les monstres ne sont pas tous mort
-        # si les perso sont pas alive:
+        # si les perso de l'équipe sont pas alive:
             # return false
         # pour chaque monstre
-            # chaque character attack monstre
-    # return trues
+            # pour chaque character
+                # character attack monstre
+                # monstre attack character
+    # return true
 
-def recalculate_score(wave):
+def recalculate_score(wave_number, score) -> int:
+    # return score + wave * 2
     ...
 
 def save_score(score):
     ...
 
 def play():
-    characters = [
-    {"_id": 1, "name": "Gobelin", "atk": 10, "def": 5, "pv": 50},
-    {"_id": 2, "name": "Orc", "atk": 20, "def": 8, "pv": 120},
-    {"_id": 3, "name": "Dragon", "atk": 35, "def": 20, "pv": 300},
-    {"_id": 4, "name": "Zombie", "atk": 12, "def": 6, "pv": 70},
-    {"_id": 5, "name": "Troll", "atk": 25, "def": 15, "pv": 200},
-    {"_id": 6, "name": "Spectre", "atk": 18, "def": 10, "pv": 100},
-    {"_id": 7, "name": "Golem", "atk": 30, "def": 25, "pv": 250},
-    {"_id": 8, "name": "Vampire", "atk": 22, "def": 12, "pv": 150},
-    {"_id": 9, "name": "Loup-garou", "atk": 28, "def": 18, "pv": 180},
-    {"_id": 10, "name": "Squelette", "atk": 15, "def": 7, "pv": 90}
-]
-    monsters = [
-    {"_id": 1, "name": "Gobelin", "atk": 10, "def": 5, "pv": 50},
-    {"_id": 2, "name": "Orc", "atk": 20, "def": 8, "pv": 120},
-    {"_id": 3, "name": "Dragon", "atk": 35, "def": 20, "pv": 300},
-    {"_id": 4, "name": "Zombie", "atk": 12, "def": 6, "pv": 70},
-    {"_id": 5, "name": "Troll", "atk": 25, "def": 15, "pv": 200},
-    {"_id": 6, "name": "Spectre", "atk": 18, "def": 10, "pv": 100},
-    {"_id": 7, "name": "Golem", "atk": 30, "def": 25, "pv": 250},
-    {"_id": 8, "name": "Vampire", "atk": 22, "def": 12, "pv": 150},
-    {"_id": 9, "name": "Loup-garou", "atk": 28, "def": 18, "pv": 180},
-    {"_id": 10, "name": "Squelette", "atk": 15, "def": 7, "pv": 90}
-]
-
-    team = create_team(characters)
-    score = 0
-    while is_team_alive(team):
-        wave = new_wave(monsters)
-        team_win = fight(team, wave)
-        if team_win:
-            score = recalculate_score(wave)
-
-    save_score(score)
-    # tant que tout les persos sont en vie:
-        # nouvelle vague
-        # combat équipe et current vague
-        # recalculer score
+    # créer une équipe
+        # create_team() -> renvoie une liste de characters
+    # initaliser le score et le nombre de vague à 0
+    # tant que tout les characters dans l'équipe sont en vie:
+        # nouvelle vague -> renvoie une liste de monsters de len WAVE_SIZE
+        # nombre de vague + 1
+        # combat entre notre équipe et new wave -> renvoie un bool: True si notre équipe gagne, False si elle a perdu
+            # si equipe gagne
+                # recalculer score
+            # sinon
+                # sortir de la boucle while
+    # message de fin avec score et nombre de vague
     # save_score
+        # ajouter le score à la base de donnée
     ...
 
-def show_leaderboard():
-    print("leaderboard")
 
+def show_leaderboard():
+    ...
+    
 def quit():
     ...
 
+
+# options 
+    # list dict associations name, function
 options = [{"name": "Jouer", "func": play}, {"name": "Leaderboard", "func": show_leaderboard}, {"name": "Quitter", "func": quit}]
 
 def get_options_name(options):
     return [option.get("name", "inconnu") for option in options]
 
 def print_options(options_name):
+    # print_options(options):
+    # pour chaque index, option dans enumerate(options_names) commençant à 1
+        # afficher option numérotée de l'indice
     for index, option_name in enumerate(options_name, start=1):
-        print(f"{index}. {option_name}")
+        print(f"{index}: {option_name}")
 
 def is_choice_valid(choice, min, max):
+    # is_choice_valid(choice, min, max):
+    # vérifier si le choix contient seulement des entiers
+        # convertir str to int
+        # vérifier si le choix est compris entre min et max
+            # return True
+    # return False
     if choice.isdigit():
         choice = int(choice)
         if choice >= min and choice <= max:
             return True
     return False
 
-def print_error(message):
-    print(f"Erreur: {message}")
-
 def get_valid_choice(options):
+    # Récupérer un choix valide parmi les options(options)
+        # Récupérer une liste des noms d'options
+        # while True
+            # afficher options numérotées: print_options(options)
+            # récupérer choix: input()
+            # si choix valide: is_choice_valid(choix, 1, len(options)
+                # return choix en int
+            # sinon 
+                # afficher erreur
     options_name = get_options_name(options)
     while True:
         print_options(options_name)
@@ -157,14 +132,19 @@ def get_valid_choice(options):
         if is_choice_valid(choice, 1, len(options)):
             return int(choice)
         else:
-            print_error("Choix invalide")
+            utils.print_error("Choix invalide")
 
 def handle_choice(choice, options):
     options[choice - 1]["func"]()
 
 def main():
-    choice = get_valid_choice(options)
-    handle_choice(choice, options)
+    # Main
+    #  Tant que vrai
+        # choice = Récupérer choix valide parmi les options(options)
+        # Lancer le processus associé au choix : options[choice - 1]["function"]()
+    while True:
+        choice = get_valid_choice(options)
+        handle_choice(choice, options)
 
 if __name__ == "__main__": 
     main()
