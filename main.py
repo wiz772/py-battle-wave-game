@@ -22,7 +22,7 @@ def create_team(characters):
         available_chars.pop(choice - 1)
     return team
 
-def is_team_alive(team):
+def is_team_alive(team) -> bool:
     # pour chaque personnage dans team
         # si un personnage a des pv supérieur à 0
             # return True
@@ -64,12 +64,13 @@ def save_score(score):
     ...
 
 def play():
+    # récupérer les collections monstres et characters de la DB
     # créer une équipe
         # create_team() -> renvoie une liste de characters
     # initaliser le score et le nombre de vague à 0
     # tant que tout les characters dans l'équipe sont en vie:
-        # nouvelle vague -> renvoie une liste de monsters de len WAVE_SIZE
-        # nombre de vague + 1
+        # appeler nouvelle vague -> renvoie une liste de monsters de len WAVE_SIZE
+        # incrémenter nombre de vague
         # combat entre notre équipe et new wave -> renvoie un bool: True si notre équipe gagne, False si elle a perdu
             # si equipe gagne
                 # recalculer score
@@ -77,20 +78,14 @@ def play():
                 # sortir de la boucle while
     # message de fin avec score et nombre de vague
     # save_score
-        # ajouter le score à la base de donnée
+        # sauvegarder le score dans la base de donnée
     ...
-
 
 def show_leaderboard():
     ...
     
 def quit():
     ...
-
-
-# options 
-    # list dict associations name, function
-options = [{"name": "Jouer", "func": play}, {"name": "Leaderboard", "func": show_leaderboard}, {"name": "Quitter", "func": quit}]
 
 def get_options_name(options):
     return [option.get("name", "inconnu") for option in options]
@@ -102,7 +97,7 @@ def print_options(options_name):
     for index, option_name in enumerate(options_name, start=1):
         print(f"{index}: {option_name}")
 
-def is_choice_valid(choice, min, max):
+def is_choice_valid(choice, minimum, maximum) -> bool:
     # is_choice_valid(choice, min, max):
     # vérifier si le choix contient seulement des entiers
         # convertir str to int
@@ -111,7 +106,7 @@ def is_choice_valid(choice, min, max):
     # return False
     if choice.isdigit():
         choice = int(choice)
-        if choice >= min and choice <= max:
+        if choice >= minimum and choice <= maximum:
             return True
     return False
 
@@ -142,9 +137,13 @@ def main():
     #  Tant que vrai
         # choice = Récupérer choix valide parmi les options(options)
         # Lancer le processus associé au choix : options[choice - 1]["function"]()
+    
+    # main_options 
+    # list dict associations name, func
+    main_options = [{"name": "Jouer", "func": play}, {"name": "Leaderboard", "func": show_leaderboard}, {"name": "Quitter", "func": quit}]
     while True:
-        choice = get_valid_choice(options)
-        handle_choice(choice, options)
+        choice = get_valid_choice(main_options)
+        handle_choice(choice, main_options)
 
 if __name__ == "__main__": 
     main()
