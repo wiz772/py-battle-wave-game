@@ -45,7 +45,7 @@ def new_wave(monsters):
     wave = random.sample(monsters, 3)
     return wave
 
-def attack(attacker, target) -> int:
+def get_new_health_of_victim(attacker, target) -> int:
     # return les nouveau pv de la target - attack // def
     target_pv = target["pv"] - attacker["atk"] // target["def"]
     return target_pv
@@ -77,12 +77,17 @@ def start_fight(team, monsters):
     return score, wave_number
     
 def fight_wave(team, wave) -> bool:
-    # tant que les monstres ne sont pas tous mort
-        # pour chaque monstre encore alive  
-            # si au moins un perso de l'équipe n'est pas alive:
-                # return false
-            # pour chaque characater encore alive        
-    ...
+    # Tant que vrai
+        # tour de l'équipe
+        # si wave est morte:
+        # return True
+
+        # tour de la wave 
+        # si wave a un vivant:
+            # pr chaque vivant:
+                # attaque equipe  
+    while True:
+        ... 
 
 def recalculate_score(wave_number, score) -> int:
     # return score + wave * 2
