@@ -77,6 +77,19 @@ def get_alive_entities(entities):
     return [ entity for entity in entities if entity["pv"] > 0 ]
     # return tout entity dans entities qui ont pv > 0
 
+def is_alive(entity):
+    return entity["pv"] > 0
+
+def get_next_target(targets):
+    ...
+
+def attack(attacker, target):
+    ...
+
+def check_entity_death(entity):
+    if not is_alive(entity):
+        utils.print_target_killed(entity)
+
 def get_new_health_of_target_after_attack(attacker_atk, target_pv, target_def):
     damage = max(1, attacker_atk // target_def)
     return target_pv - damage
@@ -94,11 +107,10 @@ def fight_round(attackers, targets):
         if len(alive_targets) == 0:
             return
         
-        current_target = random.choice(alive_targets)
-        current_target["pv"] = get_new_health_of_target_after_attack(attacker["atk"], current_target["pv"], current_target["def"])
+        current_target = get_next_target(alive_targets)
+        attack(attacker, current_target)
 
-        if current_target["pv"] <= 0:
-            utils.print_target_killed(current_target["name"])
+        check_entity_death(current_target)            
 
 def fight_wave(team, wave) -> bool:
     # tant que vrai
