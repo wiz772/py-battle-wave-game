@@ -34,21 +34,11 @@ def is_team_alive(team) -> bool:
             return True
     return False
 
-
-
-def is_alive(character):
-    return character["pv"] > 0
-
 def new_wave(monsters):
     # initaliser new_wave avec un sample de monsters de len WAVE_SIZE
     # return new wave
     wave = random.sample(monsters, 3)
     return wave
-
-def get_new_health_of_victim(attacker, target) -> int:
-    # return les nouveau pv de la target - attack // def
-    target_pv = target["pv"] - attacker["atk"] // target["def"]
-    return target_pv
 
 def start_fight(team, monsters):
     # initaliser le score et le nombre de vague à 0
@@ -71,23 +61,58 @@ def start_fight(team, monsters):
         if team_win:
             new_score = recalculate_score(wave_number, score)
             score = new_score
-            utils.print_wave_win(score)
+            utils.print_wave_win()
         else:
+            print("perdu")
             break
     return score, wave_number
+
+def get_alive_entities(entities):
+    return [ entity for entity in entities if entity["pv"] > 0 ]
+    # return tout entity dans entities qui ont pv > 0
+
+def get_new_health_of_target(attacker_atk, target_pv, target_def):
+    damage = max(1, attacker_atk // target_def)
+    return target_pv - damage
+
+def fight_round(attackers, targets):
+    # get attackers alive
+    # Pour chaque attacker dans alive attackers
+        # get target alive
+        # si aucun target alive return
+        # get current target avec index modulo len alive target
+        # attack une parmis target alive
+    alive_attackers = get_alive_entities(attackers)
+    for index, attacker in enumerate(alive_attackers):
+        alive_targets = get_alive_entities(targets)
+
+        if len(alive_targets) == 0:
+            return
+        
+        current_target = alive_targets[index % len(alive_targets)]
+        current_target["pv"] = get_new_health_of_target(attacker["atk"], current_target["pv"], current_target["def"])
+
+                
+    
     
 def fight_wave(team, wave) -> bool:
-    # Tant que vrai
-        # tour de l'équipe
+    # tant que vrai
+        # wave = tour de l'équipe encore en vie contre les monstres encore en vie
         # si wave est morte:
-        # return True
+            # return True
 
-        # tour de la wave 
-        # si wave a un vivant:
-            # pr chaque vivant:
-                # attaque equipe  
+        # team = tour de la wave encore en vie contre les joueurs encore en vie
+        # si team est mort:
+            # return false
     while True:
-        ... 
+        fight_round(team, wave)
+        if not is_team_alive(wave):
+            return True
+
+        fight_round(wave, team)
+        if not is_team_alive(team):
+            return False
+        
 
 def recalculate_score(wave_number, score) -> int:
     # return score + wave * 2

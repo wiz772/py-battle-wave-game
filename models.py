@@ -14,8 +14,8 @@ monsters = [
 characters = [
     {"_id": 1, "name": "Guerrier", "atk": 10, "def": 10, "pv": 100},
     {"_id": 2, "name": "Panda", "atk": 1, "def": 10, "pv": 10},
-    {"_id": 3, "name": "Gougoubibi", "atk": 150, "def": 100, "pv": 100},
+    {"_id": 3, "name": "Gougoubibi", "atk": 15, "def": 100, "pv": 100},
     {"_id": 4, "name": "Jules César", "atk": 15, "def": 10, "pv": 1000},
-    {"_id": 5, "name": "Le lion", "atk": 100, "def": 20, "pv": 100},
-    {"_id": 6, "name": "jilien", "atk": 150, "def": 60, "pv": 200}
+    {"_id": 5, "name": "Le lion", "atk": 1, "def": 20, "pv": 100},
+    {"_id": 6, "name": "jilien", "atk": 15, "def": 60, "pv": 200}
 ]
