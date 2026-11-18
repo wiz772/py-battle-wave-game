@@ -4,12 +4,11 @@ import models
 import time
 import copy
 import sys
+import db_manager
 
 from constants import TEAM_SIZE, WAVE_SIZE, SECONDS_BETWEEN_ROUNDS
 
-
 # =================================game logic===========================================
-
 
 # Créer une équipe
         # initialiser available_chars = copy characters
@@ -81,18 +80,28 @@ def is_alive(entity):
     return entity["pv"] > 0
 
 def get_next_target(targets):
-    ...
+    return random.choice(targets)
+
+def calculate_damage(attacker, target):
+    # Besoin attacker atk
+    # Besoin target def
+    # return les dégats atk // def minimum de 1
+    return max(1, attacker["atk"] // target["def"])
 
 def attack(attacker, target):
-    ...
+    #  Besoin attacker
+    #  Besoin target
+    #  Calculer les dégâts
+    #  Changer les pv de target: target_pv = target_pv - dégâts
+    damage = calculate_damage(attacker, target)
+    target["pv"] = target["pv"] - damage
+
+def on_entity_death(entity):
+    utils.print_entity_death(entity)
 
 def check_entity_death(entity):
     if not is_alive(entity):
-        utils.print_target_killed(entity)
-
-def get_new_health_of_target_after_attack(attacker_atk, target_pv, target_def):
-    damage = max(1, attacker_atk // target_def)
-    return target_pv - damage
+        on_entity_death(entity)
 
 def fight_round(attackers, targets):
     # get attackers alive
@@ -109,7 +118,6 @@ def fight_round(attackers, targets):
         
         current_target = get_next_target(alive_targets)
         attack(attacker, current_target)
-
         check_entity_death(current_target)            
 
 def fight_wave(team, wave) -> bool:
@@ -148,7 +156,7 @@ def play():
     # lancer le combat : start_fight(team) -> qui return score et wave_number
     # envoyer un message de fin avec score et nombre de vague
     # sauvegarder les scores
-    characters, monsters = models.characters, models.monsters
+    characters, monsters = db_manager.get_characters(), db_manager.get_monsters()
     team = create_team(characters)
     score, wave_number = start_fight(team, monsters)
     utils.print_end(score, wave_number)
