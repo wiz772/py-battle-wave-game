@@ -1,9 +1,15 @@
 import random
 import utils
 import models
+import time
+import copy
+import sys
 
-TEAM_SIZE = 3
-WAVE_SIZE = 4
+from constants import TEAM_SIZE, WAVE_SIZE, SECONDS_BETWEEN_ROUNDS
+
+
+# =================================game logic===========================================
+
 
 # Créer une équipe
         # initialiser available_chars = copy characters
@@ -15,7 +21,7 @@ WAVE_SIZE = 4
                 # remove choix à available_characters()
         # return equipe
 def create_team(characters):
-    available_chars = characters.copy()
+    available_chars = copy.deepcopy(characters)
     team = []
     while len(team) < TEAM_SIZE:
         choice = get_valid_choice(available_chars)
@@ -37,7 +43,8 @@ def is_team_alive(team) -> bool:
 def new_wave(monsters):
     # initaliser new_wave avec un sample de monsters de len WAVE_SIZE
     # return new wave
-    wave = random.sample(monsters, 3)
+    available_monsters = copy.deepcopy(monsters)
+    wave = random.sample(available_monsters, WAVE_SIZE)
     return wave
 
 def start_fight(team, monsters):
@@ -59,19 +66,18 @@ def start_fight(team, monsters):
         wave_number += 1
         team_win = fight_wave(team, current_wave)
         if team_win:
-            new_score = recalculate_score(wave_number, score)
-            score = new_score
+            score = recalculate_score(wave_number, score)
             utils.print_wave_win()
         else:
-            print("perdu")
             break
+        time.sleep(SECONDS_BETWEEN_ROUNDS)
     return score, wave_number
 
 def get_alive_entities(entities):
     return [ entity for entity in entities if entity["pv"] > 0 ]
     # return tout entity dans entities qui ont pv > 0
 
-def get_new_health_of_target(attacker_atk, target_pv, target_def):
+def get_new_health_of_target_after_attack(attacker_atk, target_pv, target_def):
     damage = max(1, attacker_atk // target_def)
     return target_pv - damage
 
@@ -80,21 +86,20 @@ def fight_round(attackers, targets):
     # Pour chaque attacker dans alive attackers
         # get target alive
         # si aucun target alive return
-        # get current target avec index modulo len alive target
+        # get current target dans alive_targets aléaoitrmet
         # attack une parmis target alive
     alive_attackers = get_alive_entities(attackers)
-    for index, attacker in enumerate(alive_attackers):
-        alive_targets = get_alive_entities(targets)
-
+    for attacker in alive_attackers:
+        alive_targets  = get_alive_entities(targets)
         if len(alive_targets) == 0:
             return
         
-        current_target = alive_targets[index % len(alive_targets)]
-        current_target["pv"] = get_new_health_of_target(attacker["atk"], current_target["pv"], current_target["def"])
+        current_target = random.choice(alive_targets)
+        current_target["pv"] = get_new_health_of_target_after_attack(attacker["atk"], current_target["pv"], current_target["def"])
 
-                
-    
-    
+        if current_target["pv"] <= 0:
+            utils.print_target_killed(current_target["name"])
+
 def fight_wave(team, wave) -> bool:
     # tant que vrai
         # wave = tour de l'équipe encore en vie contre les monstres encore en vie
@@ -118,8 +123,12 @@ def recalculate_score(wave_number, score) -> int:
     # return score + wave * 2
     return score + wave_number * 2
 
+# ================================persistence============================================
+
 def save_score(score):
     ...
+
+# ============================================================================
 
 def play():
     # récupérer les collections monstres et characters de la DB
@@ -137,7 +146,10 @@ def show_leaderboard():
     ...
     
 def quit():
-    ...
+    utils.print_exit_message()
+    sys.exit()
+
+# ============================================================================
 
 def get_options_name(options):
     return [option.get("name", "inconnu") for option in options]
