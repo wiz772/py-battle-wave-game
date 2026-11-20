@@ -11,7 +11,7 @@ def fetch_collections(collection_name):
     collection = db.get_collection(collection_name)
 
     found = collection.find({})
-    return found
+    return list(found)
 
 def get_characters():
     return fetch_collections("characters")

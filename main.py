@@ -146,7 +146,10 @@ def recalculate_score(wave_number, score) -> int:
 # ================================persistence============================================
 
 def save_score(score):
-    ...
+    score_dict = {
+        "score": score
+    }
+    db_manager.insert_new_score(score_dict)
 
 # ============================================================================
 
@@ -156,14 +159,15 @@ def play():
     # lancer le combat : start_fight(team) -> qui return score et wave_number
     # envoyer un message de fin avec score et nombre de vague
     # sauvegarder les scores
-    characters, monsters = db_manager.get_characters(), db_manager.get_monsters()
+    characters, monsters = models.characters, models.monsters
     team = create_team(characters)
     score, wave_number = start_fight(team, monsters)
     utils.print_end(score, wave_number)
     save_score(score)
 
 def show_leaderboard():
-    ...
+    scores = db_manager.get_scores()
+    utils.print_scores(scores)
     
 def quit():
     utils.print_exit_message()

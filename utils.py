@@ -16,3 +16,9 @@ def print_exit_message():
         BYE BYE BYE BYE DOIGBYE BYE
 
     """)
+
+def print_scores(top_scores):
+    print("\nVoici les scores:")
+    for index, score in enumerate(top_scores):
+        print(f"{index + 1} - {score}")
+    print("\n")
